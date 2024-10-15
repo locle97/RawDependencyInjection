@@ -6,8 +6,8 @@ internal class Program
     private static void Main(string[] args)
     {
         DIStorage storage = new();
-        storage.AddType(typeof(Repository));
-        storage.AddType<Service>();
+        storage.AddType<IRepository, Repository>();
+        storage.AddType<IService, Service>();
         storage.AddType<Controller>();
 
         DIProvider provider = new(storage);
@@ -28,10 +28,9 @@ public class DIProvider
 
     public object CreateInstance(Type t)
     {
-        Type type = _storage.GetType(t);
-        ConstructorInfo constructor = type.GetConstructors().Single();
+        Type implementation = _storage.GetImplementation(t);
+        ConstructorInfo constructor = implementation.GetConstructors().Single();
         ParameterInfo[] parameters = constructor.GetParameters();
-
 
         List<object> listDependency = new();
         foreach (var param in parameters)
@@ -39,8 +38,7 @@ public class DIProvider
             listDependency.Add(CreateInstance(param.ParameterType));
         }
 
-        return Activator.CreateInstance(type, listDependency.ToArray())!;
-
+        return Activator.CreateInstance(implementation, listDependency.ToArray())!;
     }
 
     public T CreateInstance<T>() => (T) CreateInstance(typeof(T));
@@ -48,34 +46,61 @@ public class DIProvider
 
 public class DIStorage
 {
-    private readonly List<Type> _types;
+    private readonly List<DI> _dependencies;
 
     public DIStorage()
     {
-        _types = new();
+        _dependencies = new();
     }
 
     public void AddType(Type t)
     {
-        _types.Add(t);
+        _dependencies.Add(new DI(t));
     }
 
     public void AddType<T>()
     {
-        _types.Add(typeof(T));
+        _dependencies.Add(new DI(typeof(T)));
     }
 
-    public Type GetType(Type type)
+    public void AddType<TAbs, TImp>()
     {
-        return _types.Single(t => t.Name == type.Name);
+        _dependencies.Add(new DI(typeof(TAbs), typeof(TImp)));
+    }
+
+    public Type GetImplementation(Type abs)
+    {
+         DI dependency = _dependencies.Single(t => t.Abstraction!.Name == abs.Name);
+         return dependency.Implementation!;
+    }
+}
+
+public class DI
+{
+    private Type? _abstration;
+    private Type? _implementation;
+
+    public Type? Abstraction => _abstration;
+    public Type? Implementation => _implementation;
+
+    public DI(Type t)
+    {
+        _abstration = t;
+        _implementation = t;
+    }
+
+    public DI(Type abs, Type imp)
+    {
+        _abstration = abs;
+        _implementation = imp;
     }
 }
 
 public class Controller
 {
-    private readonly Service _service;
+    private readonly IService _service;
 
-    public Controller(Service service)
+    public Controller(IService service)
     {
         _service = service;
     }
@@ -87,11 +112,11 @@ public class Controller
     }
 }
 
-public class Service
+public class Service: IService
 {
-    private readonly Repository _repository;
+    private readonly IRepository _repository;
 
-    public Service(Repository repository)
+    public Service(IRepository repository)
     {
         _repository = repository;
     }
@@ -103,7 +128,12 @@ public class Service
     }
 }
 
-public class Repository
+public interface IService
+{
+    string GetFullname();
+}
+
+public class Repository: IRepository
 {
     public Person GetPerson()
     {
@@ -113,6 +143,11 @@ public class Repository
             LastName = "Le"
         };
     }
+}
+
+public interface IRepository
+{
+    Person GetPerson();
 }
 
 public class Person

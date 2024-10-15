@@ -10,8 +10,8 @@ internal class Program
         storage.AddType<IService, Service>();
         storage.AddType<Controller>();
 
-        DIProvider provider = new(storage);
-        Controller controller = provider.CreateInstance<Controller>();
+        DIProvider serviceProvider = new(storage);
+        Controller controller = serviceProvider.CreateInstance<Controller>();
 
         controller.Render();
     }

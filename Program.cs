@@ -18,9 +18,3 @@
         controller3.Render();
     }
 }
-
-public class MyConfig
-{
-    public string ConnectionString { get; set; } = string.Empty;
-    public int RetryCount { get; set; } = 0;
-}

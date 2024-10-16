@@ -1,12 +1,10 @@
 public class Service: IService
 {
     private readonly IRepository _repository;
-    private readonly MyConfig _config;
 
-    public Service(IRepository repository, MyConfig config)
+    public Service(IRepository repository)
     {
         _repository = repository;
-        _config = config;
     }
 
     public string GetFullname()

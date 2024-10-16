@@ -3,6 +3,7 @@ using Dumpify;
 public class Controller
 {
     private readonly IService _service;
+    private readonly int _random = new Random().Next();
 
     public Controller(IService service)
     {

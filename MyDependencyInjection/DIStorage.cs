@@ -1,8 +1,8 @@
-public class DIStorage
+public class DependencyContainer
 {
     private readonly List<DIModel> _dependencies;
 
-    public DIStorage()
+    public DependencyContainer()
     {
         _dependencies = new();
     }

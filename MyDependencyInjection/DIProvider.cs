@@ -1,10 +1,10 @@
 using System.Reflection;
 
-public class DIProvider
+public class DependencyProvider
 {
-    private DIStorage _storage;
+    private DependencyContainer _storage;
 
-    public DIProvider(DIStorage storage)
+    public DependencyProvider(DependencyContainer storage)
     {
         _storage = storage;
     }

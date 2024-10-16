@@ -2,13 +2,13 @@
 {
     private static void Main(string[] args)
     {
-        DIStorage storage = new();
-        storage.AddType<IRepository, Repository>();
-        storage.AddType<IService, Service>();
-        storage.AddType<Controller>();
+        DependencyContainer container = new();
+        container.AddType<IRepository, Repository>();
+        container.AddType<IService, Service>();
+        container.AddType<Controller>();
 
-        DIProvider serviceProvider = new(storage);
-        Controller controller = serviceProvider.CreateInstance<Controller>();
+        DependencyProvider provider = new(container);
+        Controller controller = provider.CreateInstance<Controller>();
 
         controller.Render();
     }

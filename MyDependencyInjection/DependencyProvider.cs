@@ -27,7 +27,8 @@ public class DependencyProvider
             listDependency.Add(CreateInstance(param.ParameterType));
         }
 
-        object instance = Activator.CreateInstance(implementation, listDependency.ToArray())!;
+        object instance = Activator.CreateInstance(implementation,
+                                                   listDependency.ToArray())!;
 
         if (lifeSpan == LifeSpan.Singleton && dependency.Instance is null)
             dependency.Instance = instance;
@@ -35,6 +36,6 @@ public class DependencyProvider
         return instance;
     }
 
-    public T CreateInstance<T>() => (T) CreateInstance(typeof(T));
+    public T CreateInstance<T>() => (T)CreateInstance(typeof(T));
 }
 

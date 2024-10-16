@@ -21,13 +21,17 @@ public class DependencyContainer
 
     public void AddTransient<T>() => AddTransient(typeof(T));
 
-    public void AddTransient<T>(object initialInstance) => AddType(typeof(T), typeof(T), LifeSpan.Transient, initialInstance);
+    public void AddTransient<T>(object initialInstance) 
+        => AddType(typeof(T), typeof(T), LifeSpan.Transient, initialInstance);
 
-    public void AddTransient(Type abstraction, Type implementation) => AddType(abstraction, implementation, LifeSpan.Transient);
+    public void AddTransient(Type abstraction, Type implementation) 
+        => AddType(abstraction, implementation, LifeSpan.Transient);
 
-    public void AddTransient<TAbstraction, TImplementation>() => AddTransient(typeof(TAbstraction), typeof(TImplementation));
+    public void AddTransient<TAbstraction, TImplementation>() 
+        => AddTransient(typeof(TAbstraction), typeof(TImplementation));
 
-    public void AddTransient<TAbstraction>(Type implementation) => AddTransient(typeof(TAbstraction), implementation);
+    public void AddTransient<TAbstraction>(Type implementation) 
+        => AddTransient(typeof(TAbstraction), implementation);
 #endregion
 
 #region Singleton
@@ -35,18 +39,26 @@ public class DependencyContainer
 
     public void AddSingleton<T>() => AddSingleton(typeof(T));
 
-    public void AddSingleton<T>(object initialInstance) => AddType(typeof(T), typeof(T), LifeSpan.Singleton, initialInstance);
+    public void AddSingleton<T>(object initialInstance) 
+        => AddType(typeof(T), typeof(T), LifeSpan.Singleton, initialInstance);
 
-    public void AddSingleton(Type abstraction, Type implementation) => AddType(abstraction, implementation, LifeSpan.Singleton);
+    public void AddSingleton(Type abstraction, Type implementation) 
+        => AddType(abstraction, implementation, LifeSpan.Singleton);
 
-    public void AddSingleton<TAbstraction, TImplementation>() => AddSingleton(typeof(TAbstraction), typeof(TImplementation));
+    public void AddSingleton<TAbstraction, TImplementation>() 
+        => AddSingleton(typeof(TAbstraction), typeof(TImplementation));
 
-    public void AddSingleton<TAbstraction>(Type implementation) => AddSingleton(typeof(TAbstraction), implementation);
+    public void AddSingleton<TAbstraction>(Type implementation) 
+        => AddSingleton(typeof(TAbstraction), implementation);
 #endregion
 
     public DependencyModel GetDependency(string abstractionName)
     {
-        DependencyModel dependency = _dependencies.Single(t => t.Abstraction!.Name == abstractionName);
+        DependencyModel? dependency = _dependencies.FirstOrDefault(t => t.Abstraction!.Name == abstractionName);
+
+        if (dependency is null)
+            throw new Exception($"Dependency {abstractionName} couldn't be found!");
+
         return dependency;
     }
 

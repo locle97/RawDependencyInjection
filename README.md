@@ -6,6 +6,8 @@ It will inject the defined implementation whenever something needed it.
 
 ## Dependency Inversion Principle
 
+![Dependency inversion](./docs/dependency-inversion.png)
+
 - Regularly, when we need to use some methods of service B inside of service A, programmer need to initiate
 service B and pass it into service A via constructor. It make the service A is strictly depended on service B.
 ```
@@ -25,6 +27,9 @@ Service A -> Abstraction B <- Service B
     - Singleton: the same **single instance** is used for all of injection.
 
 ## How to implement DI Provider
+
+![IOC Container](./docs/IOC-Container.png)
+
 - Using `System.Reflection` to dynamically interract with class | interface.
 - Using `Activator.CreateInstance<T>()` to dynamically create an new instance.
 - Using `typeof(class | interface)` to get a Type of class or interface.
